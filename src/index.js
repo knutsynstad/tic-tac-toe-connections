@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Board from './Board';
 import boards from './boards.json';
 import linkColor from './linkColor';
+import sortLevel from './sortLevel';
 
 const marginHorizontal = 225;
 const marginVertical = 90;
@@ -32,6 +33,9 @@ for (let level = 0; level < levels.length; level += 1) {
     index.set(board.id, board);
   }
 }
+
+// Here is where we'd resort.
+sortLevel(levels[5], "children", 204, marginVertical, index);
 
 class Poster extends React.Component {
   render() {
