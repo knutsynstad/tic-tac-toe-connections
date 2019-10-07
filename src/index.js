@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import Board from './Board';
 import boards from './boards.json';
 import linkColor from './linkColor';
-import sortLevel from './sortLevel';
+import balanceLevel from './level';
 
-const marginHorizontal = 225;
+//const marginHorizontal = 225;
+const marginHorizontal = 405;
 const marginVertical = 90;
 const offset = 15;
 const cellSize = 15;
@@ -22,8 +23,6 @@ boards.forEach(board => {
   })
 })
 
-levels.forEach(level => console.log(level.length));
-
 let index = new Map();
 for (let level = 0; level < levels.length; level += 1) {
   for (let row = 0; row < levels[level].length; row += 1) {
@@ -34,23 +33,41 @@ for (let level = 0; level < levels.length; level += 1) {
   }
 }
 
-// Here is where we'd resort.
-sortLevel(levels[5], "children", 204, marginVertical, index);
+// Balance the columns
+let balancePairs = [
+  [5, 6],
+  [4, 5],
+  [3, 4],
+  [2, 3],
+  [1, 2],
+  [0, 1],
+  [7, 6],
+  [8, 7],
+  [9, 8]
+];
+
+balancePairs.forEach((pair) => {
+  const [origin, target] = pair;
+  levels[origin] = balanceLevel(levels[origin], levels[target], marginVertical, index);
+  levels[origin].forEach(board => index.set(board.id, board));
+});
 
 class Poster extends React.Component {
   render() {
     var elements=[]
     levels.forEach(level => {
       level.forEach(board => {
-        elements.push(
-          <Board
-            x={board.x}
-            y={board.y}
-            cellSize={cellSize}
-            key={board.id}
-            board={board}
-          />
-        );
+        if (board) {
+          elements.push(
+            <Board
+              x={board.x}
+              y={board.y}
+              cellSize={cellSize}
+              key={board.id}
+              board={board}
+            />
+          );
+        }
       })
     })
 
