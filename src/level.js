@@ -1,5 +1,3 @@
-import distance from './distance';
-
 const updateY = (col, margin) => {
   let column = [...col];
   column.forEach((board, index) => {
@@ -12,39 +10,62 @@ const updateY = (col, margin) => {
 }
 
 
-const arrayAverage = array => array.reduce((a,b) => a + b, 0) / array.length;
-const difference = (a, b) => Math.abs(a - b);
+const getDirection = (column, reference) => {
+  let direction, x1, x2;
 
+  for (let i = 0; i < column.lenght; i += 1) {
+    let board = column[i];
+    if (board) {
+      x1 = board.x;
+      break;
+    }
+  }
 
-const scoreColumnLinks = (column, reference, index) => {
-  let direction;
-  if (column[0].x > reference[0].x) {
+  for (let i = 0; i < reference.lenght; i += 1) {
+    let board = reference[i];
+    if (board) {
+      x2 = board.x;
+      break;
+    }
+  }
+
+  if (x1 > x2) {
     direction = 'parents';
   } else {
     direction = 'children';
   }
 
+  return direction
+}
+
+
+const scoreColumnLinks = (column, reference, index) => {
+  let direction = getDirection(column, reference);
   let error = 0;
 
   for (let i = 0; i < column.length; i += 1) {
     let origin = column[i];
 
     if (origin && origin[direction].length > 0) {
-      let lengths = [];
       let localError = 0;
 
-      for (let j = 0; j < origin[direction].length; j += 1) {
-        let target = origin[direction][j];
-        target = index.get(target);
-        let dist = distance(origin.x, origin.y, target.x, target.y);
-        lengths.push(dist);
+      for (let id = 0; id < origin[direction].length; id += 1) {
+        let target = index.get(origin[direction][id]);
+        let angle;
+
+        if (target.x > origin.x) {
+          angle = Math.atan2(origin.y - target.y, target.x - origin.x);
+        } else {
+          angle = Math.atan2(origin.y - target.y, origin.x - target.x);
+        }
+
+        angle = angle * 180 / Math.PI;
+        localError += angle;
       }
 
-      const localAverage = arrayAverage(lengths);
-      lengths.forEach((length) => {
-        localError += difference(localAverage, length);
-      })
-
+      // Convert to absolute value to avoid
+      // groups cancelling out each others errors.
+      localError = Math.abs(localError);
       error += localError;
 
     }
@@ -60,7 +81,7 @@ const balanceLevel = (column, ref, margin, index) => {
     let candidates = [];
     let scores = [];
 
-    for (let i = 0; i < col.length; i += 1) {
+    for (let i = 0; i < col.length + 1; i += 1) {
       let candidate = [...col];
       candidate.splice(i, 0, false);
       candidate = updateY(candidate, margin);
