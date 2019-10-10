@@ -4,9 +4,9 @@ import Board from './Board';
 import boards from './boards.json';
 import linkColor from './linkColor';
 import balanceLevel from './level';
+import getXPosition from './modules/getXPosition.js';
 
 //const marginHorizontal = 225;
-const marginHorizontal = 405;
 const marginVertical = 90;
 const offset = 15;
 const cellSize = 15;
@@ -27,7 +27,8 @@ let index = new Map();
 for (let level = 0; level < levels.length; level += 1) {
   for (let row = 0; row < levels[level].length; row += 1) {
     const board = levels[level][row];
-    board.x = level * marginHorizontal
+    const x = getXPosition(level, cellSize);
+    board.x = x;
     board.y = row * marginVertical;
     index.set(board.id, board);
   }
@@ -88,7 +89,6 @@ class Poster extends React.Component {
         C ${midpoint} ${y1},
         ${midpoint} ${y2},
         ${x2} ${y2}`;
-
       connections.push(
         <path
           key={key}

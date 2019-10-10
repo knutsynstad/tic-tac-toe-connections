@@ -13,7 +13,7 @@ const updateY = (col, margin) => {
 const getDirection = (column, reference) => {
   let direction, x1, x2;
 
-  for (let i = 0; i < column.lenght; i += 1) {
+  for (let i = 0; i < column.length; i += 1) {
     let board = column[i];
     if (board) {
       x1 = board.x;
@@ -21,7 +21,7 @@ const getDirection = (column, reference) => {
     }
   }
 
-  for (let i = 0; i < reference.lenght; i += 1) {
+  for (let i = 0; i < reference.length; i += 1) {
     let board = reference[i];
     if (board) {
       x2 = board.x;
@@ -35,12 +35,12 @@ const getDirection = (column, reference) => {
     direction = 'children';
   }
 
-  return direction
+  return direction;
 }
 
 
 const scoreColumnLinks = (column, reference, index) => {
-  let direction = getDirection(column, reference);
+  const direction = getDirection(column, reference);
   let error = 0;
 
   for (let i = 0; i < column.length; i += 1) {
