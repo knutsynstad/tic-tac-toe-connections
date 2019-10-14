@@ -63,6 +63,7 @@ class Poster extends React.Component {
             <Board
               x={board.x}
               y={board.y}
+              id={board.id}
               cellSize={cellSize}
               key={board.id}
               board={board}
@@ -84,14 +85,11 @@ class Poster extends React.Component {
       const x2 = target.x - offset;
       const y2 = target.y + (45 / 2);
       const midpoint = x1 + (x2 - x1) / 2;
-      const path = `
-        M ${x1} ${y1}
-        C ${midpoint} ${y1},
-        ${midpoint} ${y2},
-        ${x2} ${y2}`;
+      const path = `M ${x1} ${y1} C ${midpoint} ${y1}, ${midpoint} ${y2}, ${x2} ${y2}`;
       connections.push(
         <path
           key={key}
+          id={key}
           d={path}
           stroke={color}
           opacity="0.2"
@@ -101,10 +99,11 @@ class Poster extends React.Component {
 
     return (
       <g>
-        <g>
+        <g className="boards">
           {elements}
         </g>
         <g
+          className="connections"
           strokeweight="1"
           fill="none">
           {connections}

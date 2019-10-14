@@ -114,6 +114,7 @@ class Board extends React.Component {
 
     return (
       <svg
+        id={this.props.id}
         xmlns="http://www.w3.org/2000/svg"
         viewBox={viewPort}
         width={boardSize}
@@ -135,6 +136,18 @@ class Board extends React.Component {
             <line x1={third} y1={third * 2} x2={third * 2} y2={third} />
           </g>
         </defs>
+
+        {/* Hover target */}
+        <rect
+          width={boardSize}
+          height={boardSize}
+          x="0"
+          y="0"
+          fill="white"
+        />
+
+        {/* Cell backgrounds for wins */}
+        <Highlights {...this.props} color={this.getColor()} />
 
         <g klass="cells" stroke={this.getColor()} >
           {/* Row 1 */}
@@ -164,9 +177,6 @@ class Board extends React.Component {
           <line x1="0" y1={cellSize} x2={boardSize} y2={cellSize} />
           <line x1="0" y1={cellSize * 2} x2={boardSize} y2={cellSize * 2} />
         </g>
-
-        {/* Cell backgrounds for wins */}
-        <Highlights {...this.props} color={this.getColor()} />
 
       </svg>
     )
